@@ -1,10 +1,11 @@
 package com.ecom.project.controller;
 
-
+import com.ecom.project.config.AppConstants;
 import com.ecom.project.payload.CategoryDTO;
 import com.ecom.project.payload.CategoryResponse;
 import com.ecom.project.service.CatergoryService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class CategoryController {
 
+    @Autowired
     private CatergoryService catergoryService;
 
     public CategoryController(CatergoryService catergoryService) {
@@ -21,8 +23,13 @@ public class CategoryController {
     }
 
     @GetMapping("/public/categories")
-    public ResponseEntity<CategoryResponse> getCategories(){
-        CategoryResponse categoryResponse = catergoryService.getAllCategories();
+    public ResponseEntity<CategoryResponse> getCategories(
+            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder
+    ){
+        CategoryResponse categoryResponse = catergoryService.getAllCategories(pageNumber, pageSize,sortBy,sortOrder);
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
 
@@ -43,5 +50,4 @@ public class CategoryController {
             CategoryDTO addedCategoryDTO = catergoryService.updateCategory(categoryDTO, categoryId);
             return new ResponseEntity<>(addedCategoryDTO, HttpStatus.OK);
     }
-
 }

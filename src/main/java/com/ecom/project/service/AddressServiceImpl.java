@@ -96,6 +96,4 @@ public class AddressServiceImpl implements AddressService {
         addressRepository.delete(addressToBeDeleted);
         return "Address " + addressId + " has been deleted";
     }
-
-
 }
